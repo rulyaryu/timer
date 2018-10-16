@@ -1,58 +1,113 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="timer">
+      <header class="title">
+        <h1>Boxing rounds timer</h1>
+      </header>
+      <main class="timer-ui">
+        <div class="round flex">
+          <h2>Round Time</h2>
+          <div class="round_time info-text">{{workTime}}</div>
+          <div class="round_buttons">
+            <button class="plus">+</button>
+            <button class="minus">-</button>
+          </div>
+        </div>
+        <div class="rest flex">
+          <h2>Rest Time</h2>
+          <div class="rest_time info-text">01:00</div>
+          <div class="rest_buttons">
+            <button class="plus">+</button>
+            <button class="minus">-</button>
+          </div>
+        </div>
+        <div class="number flex">
+          <h2>Round total</h2>
+          <div class="number_current info-text">{{rounds}}</div>
+          <div class="number_buttons">
+            <button @click="rounds+=1" class="plus">+</button>
+            <button @click="rounds-=1" class="minus">-</button>
+          </div>
+        </div>
+        <div class="start">
+          <button @click="tick" class="start-btn">Start</button>
+        </div>
+      </main>
+      <section class="display">{{setDisplayTime}}</section>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  name: "HelloWorld",
+  data() {
+    return {
+      rounds: 1,
+      restTime: 60,
+      workTime: 180,
+      time: "03:00",
+      work: false,
+      timerId: Number
+    };
+  },
+  methods: {
+    tick() {
+      this.work = !this.work;
+      if (this.work) {
+        this.timerId = setInterval(() => {
+          this.workTime -= 1;
+        }, 1000);
+      } else if (!this.work) {
+        clearInterval(this.timerId);
+      }
+    }
+  },
+  computed: {
+    setDisplayTime() {
+      let minutes = Math.trunc(this.workTime / 60);
+      let seconds = this.workTime - minutes * 60;
+      return `${minutes} : ${seconds}`;
+    }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+h1,
+h2,
+.info-text {
+  color: azure;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+h2 {
+  text-transform: uppercase;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.info-text {
+  font-size: 4vh;
 }
-a {
-  color: #42b983;
+.title {
+  background-color: crimson;
+  padding: 5px 0;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+.flex {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.timer-ui {
+  padding: 20px;
+  background-color: #41b883;
+}
+
+.start-btn {
+  padding: 15px;
+  background-color: crimson;
+  width: 50%;
+  border: none;
+  font-size: 3vh;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: azure;
 }
 </style>
